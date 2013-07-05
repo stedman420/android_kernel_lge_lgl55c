@@ -110,6 +110,87 @@ config CPU_FREQ_DEFAULT_GOV_CONSERVATIVE
 	  Be aware that not all cpufreq drivers support the conservative
 	  governor. If unsure have a look at the help section of the
 	  driver. Fallback governor will be the performance governor.
+
+config CPU_FREQ_DEFAULT_GOV_INTERACTIVE
+	bool "interactive"
+	select CPU_FREQ_GOV_INTERACTIVE
+	select CPU_FREQ_GOV_PERFORMANCE
+	help
+	  Use the CPUFreq governor 'interactive' as default.
+          Fallback governor will be the performance governor.
+
+config CPU_FREQ_DEFAULT_GOV_INTERACTIVEX
+	bool "interactiveX"
+	select CPU_FREQ_GOV_INTERACTIVEX
+	select CPU_FREQ_GOV_PERFORMANCE
+	help
+	  Use the CPUFreq governor 'interactiveX' as default.
+          Fallback governor will be the performance governor.
+
+config CPU_FREQ_DEFAULT_GOV_LAGFREE
+	bool "lagfree"
+	select CPU_FREQ_GOV_LAGFREE
+	select CPU_FREQ_GOV_PERFORMANCE
+	help
+	  Use the CPUFreq governor 'lagfree' as default.
+	  Fallback governor will be the performance governor.
+
+config CPU_FREQ_DEFAULT_GOV_LULZACTIVE
+	bool "lulzactive"
+	select CPU_FREQ_GOV_LULZACTIVE
+	select CPU_FREQ_GOV_PERFORMANCE
+	help
+	  Use the CPUFreq governor 'lulzactive' as default.
+          Fallback governor will be the performance governor.
+
+config CPU_FREQ_DEFAULT_GOV_MINMAX
+	bool "minmax"
+	select CPU_FREQ_GOV_MINMAX
+	select CPU_FREQ_GOV_PERFORMANCE
+	help
+	  Use the CPUFreq governor 'minmax' as default.
+          Fallback governor will be the performance governor.
+
+config CPU_FREQ_DEFAULT_GOV_ONDEMANDX
+	bool "ondemandX"
+	select CPU_FREQ_GOV_ONDEMANDX
+	select CPU_FREQ_GOV_PERFORMANCE
+	help
+	  Use the CPUFreq governor 'ondemandX' as default.
+          Fallback governor will be the performance governor.
+
+config CPU_FREQ_DEFAULT_GOV_SAVAGEDZEN
+	bool "savagedzen"
+	select CPU_FREQ_GOV_SAVAGEDZEN
+	select CPU_FREQ_GOV_PERFORMANCE
+	help
+	  Use the CPUFreq governor 'savagedzen' as default.
+          Fallback governor will be the performance governor.
+
+config CPU_FREQ_DEFAULT_GOV_SCARY
+	bool "scary"
+	select CPU_FREQ_GOV_SCARY
+	select CPU_FREQ_GOV_PERFORMANCE
+	help
+	  Use the CPUFreq governor 'scary' as default.
+          Fallback governor will be the performance governor.
+
+config CPU_FREQ_DEFAULT_GOV_SMARTASS
+	bool "smartass"
+	select CPU_FREQ_GOV_SMARTASS
+	select CPU_FREQ_GOV_PERFORMANCE
+	help
+	  Use the CPUFreq governor 'smartass' as default.
+          Fallback governor will be the performance governor.
+
+config CPU_FREQ_DEFAULT_GOV_SMARTASS2
+	bool "smartass2"
+	select CPU_FREQ_GOV_SMARTASS2
+	select CPU_FREQ_GOV_PERFORMANCE
+	help
+	  Use the CPUFreq governor 'smartassV2' as default.
+          Fallback governor will be the performance governor.
+
 endchoice
 
 config CPU_FREQ_GOV_PERFORMANCE
@@ -189,5 +270,135 @@ config CPU_FREQ_GOV_CONSERVATIVE
 	  For details, take a look at linux/Documentation/cpu-freq.
 
 	  If in doubt, say N.
+
+config CPU_FREQ_GOV_INTERACTIVE
+	tristate "'interactive' cpufreq governor"
+	help
+	  'interactive' - A cpufreq governor for Latency sensitive workloads
+
+	  To compile this driver as a module, choose M here: the
+	  module will be called cpufreq_interactive.
+
+	  If in doubt, say N.
+
+config CPU_FREQ_GOV_INTERACTIVEX
+	tristate "'interactiveX' cpufreq governor"
+	help
+	  'interactiveX' - Modified version of interactive
+          with sleep+wake code.
+
+	  To compile this driver as a module, choose M here: the
+	  module will be called cpufreq_interactivex.
+
+	  If in doubt, say N.
+
+config CPU_FREQ_GOV_LAGFREE
+        tristate "'lagfree' cpufreq governor"
+        depends on CPU_FREQ
+        help
+          'lagfree' - this driver is rather similar to the 'ondemand'
+          governor both in its source code and its purpose, the difference is
+          its optimisation for better suitability in a battery powered
+          environment. The frequency is gracefully increased and decreased
+          rather than jumping to 100% when speed is required.
+
+          To compile this driver as a module, choose M here: the
+          module will be called cpufreq_lagfree.
+
+          If in doubt, say N.
+
+config CPU_FREQ_GOV_LULZACTIVE
+	tristate "'lulzactive' cpufreq governor"
+	depends on CPU_FREQ
+	help
+	  'lulzactive' - improved interactive governor
+          inspired by smartass
+
+	  To compile this driver as a module, choose M here: the
+	  module will be called cpufreq_lulzactive.
+
+	  If in doubt, say N.
+
+config CPU_FREQ_GOV_MINMAX
+	tristate "'minmax' cpufreq governor"
+	depends on CPU_FREQ
+	help
+	  'minmax' - this driver tries to minimize the frequency jumps by limiting
+	  the the selected frequencies to either the min or the max frequency of
+	  the policy. The frequency is selected according to the load.
+
+	  To compile this driver as a module, choose M here: the
+	  module will be called cpufreq_minmax.
+
+	  If in doubt, say N.
+
+config CPU_FREQ_GOV_ONDEMANDX
+	tristate "'ondemandX' cpufreq policy governor"
+	select CPU_FREQ_TABLE
+	help
+	  'ondemandX' - A dynamic cpufreq governor for
+	  Low Latency Frequency Transition capable processors
+
+	  To compile this driver as a module, choose M here: the
+	  module will be called cpufreq_ondemandx.
+
+	  If in doubt, say N.
+
+config CPU_FREQ_GOV_SAVAGEDZEN
+	tristate "'savagedzen' cpufreq governor"
+	depends on CPU_FREQ
+	help
+          'Savaged-Zen' - A badass cpufreq governor! Based on Smartass
+
+	  To compile this driver as a module, choose M here: the
+	  module will be called cpufreq_savagedzen.
+
+	  If in doubt, say N.
+
+config CPU_FREQ_GOV_SCARY
+	tristate "'scary' cpufreq governor"
+	depends on CPU_FREQ
+	help
+          'scary' - a governor for cabbages
+
+	  To compile this driver as a module, choose M here: the
+	  module will be called cpufreq_scary.
+
+	  If in doubt, say N.
+
+config CPU_FREQ_GOV_SMARTASS
+	tristate "'smartass' cpufreq governor"
+	depends on CPU_FREQ
+	help
+	  'smartass' - a "smart" optimized governor
+
+	  To compile this driver as a module, choose M here: the
+	  module will be called cpufreq_smartass.
+
+	  If in doubt, say N.
+
+config CPU_FREQ_GOV_SMARTASS2
+	tristate "'smartassV2' cpufreq governor"
+	depends on CPU_FREQ
+	help
+	  'smartassV2' - a slighly more aggressive smartass governor
+
+	  To compile this driver as a module, choose M here: the
+	  module will be called cpufreq_smartass2.
+
+	  If in doubt, say N.
+
+config CPU_FREQ_MIN_TICKS
+	int "Ticks between governor polling interval."
+	default 10
+	help
+	  Minimum number of ticks between polling interval for governors.
+
+config CPU_FREQ_SAMPLING_LATENCY_MULTIPLIER
+	int "Sampling rate multiplier for governors."
+	default 1000
+	help
+	  Sampling latency rate multiplied by the cpu switch latency.
+	  Affects governor polling.
 
 endif	# CPU_FREQ

@@ -132,10 +132,7 @@ struct audio {
 
 	int mfield; /* meta field embedded in data */
 	int rflush; /* Read  flush */
-/* LGE_CHANGE_S [nalin.lee@lge.com] 2011-06-23 QCT patch for video seek */
-	int eos_in_progress; 
-/* LGE_CHANGE_E [nalin.lee@lge.com] 2011-06-23 QCT patch for video seek */
-
+	int eos_in_progress;
 	int wflush; /* Write flush */
 	int opened;
 	int enabled;
@@ -632,15 +629,12 @@ static void audplay_send_data(struct audio *audio, unsigned needed)
 			frame->used = 0;
 			audio->out_tail ^= 1;
 			wake_up(&audio->write_wait);
+		} else if ((audio->out[0].used == 0) &&
+			 (audio->out[1].used == 0) &&
+			 (audio->eos_in_progress)) {
+			wake_up(&audio->write_wait);
 		}
 
-/* LGE_CHANGE_S [nalin.lee@lge.com] 2011-06-23 QCT patch for video seek */
-		else if ((audio->out[0].used == 0) &&	
-			(audio->out[1].used == 0) &&	
-			(audio->eos_in_progress)) {  
-				wake_up(&audio->write_wait);  
-		}	
-/* LGE_CHANGE_E [nalin.lee@lge.com] 2011-06-23 QCT patch for video seek */
 	}
 
 	if (audio->out_needed) {
@@ -1300,9 +1294,7 @@ static int audaac_process_eos(struct audio *audio,
 	struct buffer *frame;
 	char *buf_ptr;
 	int rc = 0;
-/* LGE_CHANGE_S [nalin.lee@lge.com] 2011-06-23 QCT patch for video seek */
 	unsigned long flags = 0;
-/* LGE_CHANGE_E [nalin.lee@lge.com] 2011-06-23 QCT patch for video seek */
 
 	MM_DBG("signal input EOS reserved=%d\n", audio->reserved);
 	if (audio->reserved) {
@@ -1331,11 +1323,9 @@ static int audaac_process_eos(struct audio *audio,
 		audio->out[0].used, audio->out[1].used, audio->out_needed);
 	frame = audio->out + audio->out_head;
 
-/* LGE_CHANGE_S [nalin.lee@lge.com] 2011-06-23 QCT patch for video seek */
-	spin_lock_irqsave(&audio->dsp_lock, flags);  
-	audio->eos_in_progress = 1;	
-	spin_unlock_irqrestore(&audio->dsp_lock, flags);  
-/* LGE_CHANGE_E [nalin.lee@lge.com] 2011-06-23 QCT patch for video seek */
+	spin_lock_irqsave(&audio->dsp_lock, flags);
+	audio->eos_in_progress = 1;
+	spin_unlock_irqrestore(&audio->dsp_lock, flags);
 
 	rc = wait_event_interruptible(audio->write_wait,
 		(audio->out_needed &&
@@ -1344,11 +1334,9 @@ static int audaac_process_eos(struct audio *audio,
 		|| (audio->stopped)
 		|| (audio->wflush));
 
-/* LGE_CHANGE_S [nalin.lee@lge.com] 2011-06-23 QCT patch for video seek */
-	spin_lock_irqsave(&audio->dsp_lock, flags);	
-	audio->eos_in_progress = 0;	
-	spin_unlock_irqrestore(&audio->dsp_lock, flags);  
-/* LGE_CHANGE_E [nalin.lee@lge.com] 2011-06-23 QCT patch for video seek */
+	spin_lock_irqsave(&audio->dsp_lock, flags);
+	audio->eos_in_progress = 0;
+	spin_unlock_irqrestore(&audio->dsp_lock, flags);
 
 	if (rc < 0)
 		goto done;

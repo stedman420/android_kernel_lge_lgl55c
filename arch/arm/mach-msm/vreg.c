@@ -157,6 +157,7 @@ int verg_set_msmc2_level(unsigned vdd_level)
 	int dummy = 0;
 
 	result = msm_proc_comm(PCOM_MSMC2_DVS_LEVEL, &vdd_level, &dummy);
+	return result;
 }
 EXPORT_SYMBOL(verg_set_msmc2_level);
 #endif

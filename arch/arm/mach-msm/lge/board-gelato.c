@@ -183,7 +183,7 @@ static char *usb_functions_all[] = {
 #endif
 #endif
 
-static char *usb_functions_acm_modem[] = {
+/*static char *usb_functions_acm_modem[] = {
 	"acm",
 	"diag",
 	"nmea",
@@ -209,7 +209,7 @@ static char *usb_functions_ums[] = {
 static char *usb_functions_ums[] = {
 	"usb_mass_storage",
 };
-#endif
+#endif*/
 #endif
 
 #ifdef CONFIG_LGE_USB_GADGET_SUPPORT_FACTORY_USB

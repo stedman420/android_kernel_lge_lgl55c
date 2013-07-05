@@ -953,6 +953,26 @@ config MSM_CPU_FREQ_MIN
 	depends on MSM_CPU_FREQ_SET_MIN_MAX
 	default 245760
 
+config MSM_CPU_FREQ_OVERCLOCK
+	bool "Overclock the CPU frequency"
+	depends on MSM_CPU_FREQ_SET_MIN_MAX
+	default n
+	help
+	  Adds a number of overclocked frequencies.
+
+	  If unsure, choose N.
+
+config MSM_CPU_FREQ_EXTREME_OVERCLOCK
+	bool "Extremely Overclock the CPU frequency"
+	depends on MSM_CPU_FREQ_SET_MIN_MAX
+	depends on MSM_CPU_FREQ_OVERCLOCK=y
+	default n
+	help
+	  Adds overclock frequencies up to just over 1Ghz and
+	  will most likely fry your phone. You've been warned!!!.
+
+	  If unsure, choose N.
+
 endif # CPU_FREQ_MSM
 
 config MSM_CPU_AVS
@@ -1225,7 +1245,7 @@ config MSM_RPM_LOG
 	  via a debugfs node.
 
 config MSM_RPM_STATS_LOG
-	tristate "MSM Resource Power Manager Stat Driver
+	tristate "MSM Resource Power Manager Stat Driver"
 	depends on DEBUG_FS
 	depends on ARCH_MSM8X60
 	default n

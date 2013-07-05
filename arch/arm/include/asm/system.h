@@ -126,16 +126,8 @@ extern unsigned int user_debug;
 				    : : "r" (0) : "memory")
 #define dsb() __asm__ __volatile__ ("mcr p15, 0, %0, c7, c10, 4" \
 				    : : "r" (0) : "memory")
-// LGE_CHANGE_S [myeonggyu.son@lge.com] [2011.05.11] [gelato] kernel: qct patch for cpu pagged error of kgsl and egl library [START]
-#if defined(CONFIG_MACH_MSM7X27_GELATO)
 #define dmb() __asm__ __volatile__ ("mcr p15, 0, %0, c7, c10, 5" \
-    				    : : "r" (0) : "memory")
-#else
-#define dmb() do { __asm__ __volatile__ ("mcr p15, 0, %0, c7, c10, 5" \
-				: : "r" (0) : "memory"); \
-				arch_barrier_extra(); } while (0)
-#endif
-// LGE_CHANGE_E [myeonggyu.son@lge.com] [2011.05.11] [gelato] kernel: qct patch for cpu pagged error of kgsl and egl library [END]
+				: : "r" (0) : "memory")
 #elif defined(CONFIG_CPU_FA526)
 #define isb() __asm__ __volatile__ ("mcr p15, 0, %0, c7, c5, 4" \
 				    : : "r" (0) : "memory")

@@ -285,7 +285,7 @@ static int ats_mtc_set_lcd_info (mtc_scrn_id_type ScreenType)
 }
 
 #if 1 //SLATE_CROPPED_CAPTURE
-unsigned short tmp_img_block[MTC_SCRN_BUF_SIZE_MAX];
+byte tmp_img_block[MTC_SCRN_BUF_SIZE_MAX];
 EXPORT_SYMBOL(tmp_img_block);
 #endif //SLATE_CROPPED_CAPTURE
 

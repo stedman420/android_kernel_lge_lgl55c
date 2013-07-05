@@ -649,13 +649,13 @@ __WEAK struct android_usb_platform_data android_usb_pdata = {
 	.nluns = 1,
 };
 
-static struct platform_device android_usb_device = {
+/*static struct platform_device android_usb_device = {
 	.name	= "android_usb",
 	.id		= -1,
 	.dev		= {
 		.platform_data = &android_usb_pdata,
 	},
-};
+};*/
 #endif
 
 #ifdef CONFIG_USB_FUNCTION
@@ -750,7 +750,7 @@ static int hsusb_rpc_connect(int connect)
 }
 #endif
 
-#if defined(CONFIG_USB_MSM_OTG_72K) || defined(CONFIG_USB_EHCI_MSM)
+#ifdef CONFIG_USB_EHCI_MSM
 static int msm_hsusb_rpc_phy_reset(void __iomem *addr)
 {
 		return msm_hsusb_phy_reset();
@@ -824,7 +824,7 @@ static struct platform_device *usb_devices[] __initdata = {
 #endif
 };
 
-static void usb_mpp_init(void)
+/*static void usb_mpp_init(void)
 {
 	unsigned rc;
 	unsigned mpp_usb = 7;
@@ -837,7 +837,7 @@ static void usb_mpp_init(void)
 			pr_err("%s: configuring mpp pin"
 					"to enable 3.3V LDO failed\n", __func__);
 	}
-}
+}*/
 
 void __init msm_add_usb_devices(void) 
 {

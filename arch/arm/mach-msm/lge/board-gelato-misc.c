@@ -35,26 +35,43 @@
 #include <linux/fs.h>
 #include <linux/uaccess.h>
 
-
 #if defined(CONFIG_LGE_FUEL_GAUGE)
+static u32 gelato_battery_capacity(u32 current_soc);
+
+static struct msm_psy_batt_pdata msm_psy_batt_data = {
+	.voltage_min_design     = 3200,
+	.voltage_max_design     = 4300,
+	.avail_chg_sources      = AC_CHG | USB_CHG ,
+	.batt_technology        = POWER_SUPPLY_TECHNOLOGY_LION,
+	.calculate_capacity     = &gelato_battery_capacity,
+};
+
 static u32 gelato_battery_capacity(u32 current_soc)
 {
 	if(current_soc > 100)
 		current_soc = 100;
 	return current_soc;
 }
-#endif
+#else
+static u32 msm_calculate_batt_capacity(u32 current_voltage);
 
 static struct msm_psy_batt_pdata msm_psy_batt_data = {
-	.voltage_min_design     = 3200,
-	//.voltage_max_design     = 4200,				
-	.voltage_max_design     = 4300,				// 110905, junsin.park@lge.com, In fully-charged battery, to avoid over voltage status caused by voltage offset
-	.avail_chg_sources      = AC_CHG | USB_CHG ,
+	.voltage_min_design 	= 2800,
+	.voltage_max_design	= 4300,
+	.avail_chg_sources   	= AC_CHG | USB_CHG ,
 	.batt_technology        = POWER_SUPPLY_TECHNOLOGY_LION,
-#if defined(CONFIG_LGE_FUEL_GAUGE)
-	.calculate_capacity     = gelato_battery_capacity,
-#endif
+	.calculate_capacity	= &msm_calculate_batt_capacity,
 };
+
+static u32 msm_calculate_batt_capacity(u32 current_voltage)
+{
+	u32 low_voltage   = msm_psy_batt_data.voltage_min_design;
+	u32 high_voltage  = msm_psy_batt_data.voltage_max_design;
+
+	return (current_voltage - low_voltage) * 100
+		/ (high_voltage - low_voltage);
+}
+#endif
 
 static struct platform_device msm_batt_device = {
 	.name           = "msm-battery",
@@ -86,7 +103,7 @@ static struct platform_device msm_batt_device = {
 extern int aat2870bl_ldo_set_level(struct device * dev, unsigned num, unsigned vol);
 extern int aat2870bl_ldo_enable(struct device * dev, unsigned num, unsigned enable);
 
-static char *dock_state_string[] = {
+/*static char *dock_state_string[] = {
 	"0",
 	"1",
 	"2",
@@ -94,8 +111,8 @@ static char *dock_state_string[] = {
 
 enum {
 	DOCK_STATE_UNDOCKED = 0,
-	DOCK_STATE_DESK = 1, /* multikit */
-	DOCK_STATE_CAR = 2, /* carkit */
+	DOCK_STATE_DESK = 1, / multikit /
+	DOCK_STATE_CAR = 2, / carkit /
 	DOCK_STATE_UNKNOWN,
 };
 
@@ -173,7 +190,7 @@ static struct platform_device gelato_carkit_device = {
 	.dev = {
 		.platform_data = &gelato_carkit_data,
 	},
-};
+};*/
 int gelato_vibrator_power_set(int enable)
 {
 //#ifdef	LG_FW_AUDIO_GELATO_MOTOR
@@ -341,7 +358,7 @@ typedef enum {
 static void battery_status_read(char* status)
 {
 	int read;
-	size_t count;
+/*	size_t count;*/
 	int read_size;
 	char buf[14];
 	mm_segment_t oldfs;
@@ -355,7 +372,7 @@ static void battery_status_read(char* status)
 
 	if(read < 0) {
 		printk(KERN_ERR "%s, STATUS File Open Fail\n",__func__);
-		return -1;
+/*		return -1;*/
 	}
 
 	read_size = 0;
@@ -378,7 +395,7 @@ static int battery_capacity_read()
 	int result = 0;
 
 	int read;
-	size_t count;
+/*	size_t count;*/
 	int read_size;
 	char buf[5];
 	mm_segment_t oldfs;
@@ -533,13 +550,13 @@ static void blue_led_set(struct led_classdev *led_cdev,
 {
 }
 
-static int check = LED_OFF;
+/*static int check = LED_OFF;
 
 static void flag_led_set(struct led_classdev *led_cdev,
 		enum led_brightness value)
 {
 	check = value;
-}
+}*/
 
 struct led_classdev gelato_custom_leds[] = {
 	{
@@ -637,7 +654,7 @@ static struct platform_device msm_device_pmic_leds = {
 
 
 /* ear sense driver */
-static char *ear_state_string[] = {
+/*static char *ear_state_string[] = {
 	"0",
 	"1",
 };
@@ -650,7 +667,7 @@ enum {
 enum {
 	EAR_EJECT = 0,
 	EAR_INJECT = 1,
-};
+};*/
 
 #if 0
 static int gelato_hs_mic_bias_power(int enable)
@@ -720,7 +737,7 @@ static struct platform_device gelato_h2w_device = {
 };
 #endif /*CONFIG_LGE_AUDIO_HEADSET*/
 
-static int gelato_gpio_earsense_work_func(void)
+/*static int gelato_gpio_earsense_work_func(void)
 {
 	int state;
 	int gpio_value;
@@ -730,14 +747,14 @@ static int gelato_gpio_earsense_work_func(void)
 			gpio_value?"injected":"ejected");
 	if (gpio_value == EAR_EJECT) {
 		state = EAR_STATE_EJECT;
-		/* LGE_CHANGE_S, [junyoub.an] , 2010-05-28, comment out to control at ARM9 part*/
+		/ LGE_CHANGE_S, [junyoub.an] , 2010-05-28, comment out to control at ARM9 part/
 		gpio_set_value(GPIO_HS_MIC_BIAS_EN, 0);
-		/* LGE_CHANGE_E, [junyoub.an] , 2010-05-28, comment out to control at ARM9 part*/
+		/ LGE_CHANGE_E, [junyoub.an] , 2010-05-28, comment out to control at ARM9 part/
 	} else {
 		state = EAR_STATE_INJECT;
-		/* LGE_CHANGE_S, [junyoub.an] , 2010-05-28, comment out to control at ARM9 part*/
+		/ LGE_CHANGE_S, [junyoub.an] , 2010-05-28, comment out to control at ARM9 part/
 		gpio_set_value(GPIO_HS_MIC_BIAS_EN, 1);
-		/* LGE_CHANGE_E, [junyoub.an] , 2010-05-28, comment out to control at ARM9 part*/
+		/ LGE_CHANGE_E, [junyoub.an] , 2010-05-28, comment out to control at ARM9 part/
 	}
 
 	return state;
@@ -783,7 +800,7 @@ static struct platform_device gelato_earsense_device = {
 	.dev = {
 		.platform_data = &gelato_earsense_data,
 	},
-};
+};*/
 
 static struct platform_device *gelato_misc_devices[] __initdata = {
 	/* LGE_CHANGE

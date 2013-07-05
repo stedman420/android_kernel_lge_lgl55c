@@ -145,10 +145,10 @@ typedef struct {
 	unsigned char orientation_mode;
 } PACKED icd_set_screen_orientationlock_req_type;
 
-typedef PACKED struct {
+typedef struct {
 	icd_req_hdr_type hdr;
 	uint32 off_time;
-} icd_set_discharger_req_type;
+} PACKED icd_set_discharger_req_type;
 
 typedef union
 {
@@ -330,10 +330,10 @@ typedef struct {
 	unsigned char cmd_status;
 } PACKED icd_set_screenorientationlock_rsp_type;
 
-typedef PACKED struct {
+typedef struct {
 	icd_req_hdr_type hdr;
 	unsigned char cmd_status;
-} icd_set_discharger_rsp_type;
+} PACKED icd_set_discharger_rsp_type;
 
 typedef union
 {

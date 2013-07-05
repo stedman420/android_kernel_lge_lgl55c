@@ -1524,7 +1524,9 @@ static irqreturn_t smsm_irq_handler(int irq, void *data)
 			 */
 			msm_pm_flush_console();
 			
-			atomic_notifier_call_chain(&panic_notifier_list, 0, 0x87654321);
+#if 0
+	atomic_notifier_call_chain(&panic_notifier_list, 0, 0x87654321);
+#endif
 #if 1
 			smsm_reset_modem(SMSM_SYSTEM_REBOOT);
 #else

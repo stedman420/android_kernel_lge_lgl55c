@@ -98,6 +98,8 @@ PACK (void *)LGF_WMC (
   
   return NULL;
 
+return NULL;
+
 }
 
 EXPORT_SYMBOL(LGF_WMC);

@@ -27,19 +27,11 @@
  *
  */
 
-// LGE_CHANGE_S [myeonggyu.son@lge.com] [2011.05.11] [gelato] kernel: qct patch for cpu pagged error of kgsl and egl library [START]
-#if defined(CONFIG_MACH_MSM7X27_GELATO)
 #define mb() do \
-		{ \
-					dsb();\
-   				outer_sync(); \
-					write_to_strongly_ordered_memory(); \
-		} while (0)
+	{ \
+		dsb();\
+		outer_sync(); \
+		write_to_strongly_ordered_memory(); \
+	} while (0)
 #define rmb()	do { dmb(); write_to_strongly_ordered_memory(); } while (0)
 #define wmb()	mb()
-#else
-#define mb()	dmb()
-#define rmb()	dmb()
-#define wmb()	dmb()
-#endif
-// LGE_CHANGE_E [myeonggyu.son@lge.com] [2011.05.11] [gelato] kernel: qct patch for cpu pagged error of kgsl and egl library [END]

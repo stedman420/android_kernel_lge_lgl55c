@@ -187,7 +187,7 @@ struct k3dh_platform_data {
 	u8 negate_z;
 
 	int (*kr_init)(void);
-	void (*kr_exit)(void);
+	int (*kr_exit)(void);
 	int (*power_on)(void);
 	int (*power_off)(void);
 	int (*gpio_config)(int config);
@@ -210,7 +210,7 @@ struct kr3dh_platform_data {
 	u8 negate_z;
 
 	int (*kr_init)(void);
-	void (*kr_exit)(void);
+	int (*kr_exit)(void);
 	int (*power_on)(void);
 	int (*power_off)(void);
 	int (*gpio_config)(int config);
@@ -234,7 +234,7 @@ struct k3dh_platform_data {
 	u8 negate_z;
 
 	int (*kr_init)(void);
-	void (*kr_exit)(void);
+	int (*kr_exit)(void);
 	int (*power_on)(void);
 	int (*power_off)(void);
 	int (*gpio_config)(int config);

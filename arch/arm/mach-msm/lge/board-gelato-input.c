@@ -223,8 +223,10 @@ static int ts_power_on = TS_POWER_OFF;
 static int ts_set_vreg(int onoff)
 {
 	struct vreg *vreg_touch;
+#ifdef CONFIG_MACH_MSM7X27_GELATO_DOP
 	struct vreg *vreg_pullup;
 	int rc;
+#endif
 
 	printk("[Touch] ts_set_vreg() onoff:%d, ts_power_on=%d \n", onoff, ts_power_on);
 
@@ -235,7 +237,7 @@ static int ts_set_vreg(int onoff)
 #endif
 // LGE_CHANGE [yt.kim@lge.com] 2011-01-13, touch_VDDIO [END] 
 
-	if((IS_ERR(vreg_touch)) || (IS_ERR(vreg_pullup))) {
+	if (IS_ERR(vreg_touch)) {
 		printk("[Touch] vreg_get fail : touch\n");
 		return -1;
 	}
@@ -373,7 +375,7 @@ static int kr_init(void)
 	return 0;
 }
 
-static void kr_exit(void)
+static int kr_exit(void)
 {
 	return 0; 
 }
@@ -393,7 +395,7 @@ static int power_on(void)
 		ecom_is_power_on = ECOM_POWER_ON;
 	}
 	
-	return 0;
+	return ret;
 }
 
 static int power_off(void)
@@ -407,7 +409,7 @@ static int power_off(void)
 		ecom_is_power_on = ECOM_POWER_OFF;
 	}
 	
-	return 0;
+	return ret;
 }
 // LGE_CHANGE [jaekyung83.lee@lge.com] 2011-01-12, KR3DH, K3DH Platform Data[START]
 //#if defined(CONFIG_LGE_PCB_REV_A)
@@ -587,7 +589,7 @@ static int prox_power_set(unsigned char onoff)
 	if(onoff){
 		if(PROX_POWER_OFF == prox_is_power_status){
 
-#if CONFIG_MACH_MSM7X27_GELATO_DOP
+#ifdef CONFIG_MACH_MSM7X27_GELATO_DOP
 #ifdef CONFIG_LGE_PCB_REV_A
 			//power on 2.8V
 			ret = aat28xx_ldo_set_level(dev,PROXI_LDO_NO_VCC, 2800);
@@ -601,7 +603,7 @@ static int prox_power_set(unsigned char onoff)
 #ifdef CONFIG_LGE_PCB_REV_A
 			//power on 2.8V
 			ret = aat28xx_ldo_set_level(dev,PROXI_LDO_NO_VCC, 2800);
-#elif  CONFIG_LGE_PCB_REV_B
+#elif defined CONFIG_LGE_PCB_REV_B
 			// LGE_CHANGE [jaekyung83.lee@lge.com] 2011-02-22, [gelato] Rev B, Proximity Sensor change to apds9190 Voltage change 2.8V[START]
 			//power on 2.8V
 			ret = aat28xx_ldo_set_level(dev,PROXI_LDO_NO_VCC, 2800);
